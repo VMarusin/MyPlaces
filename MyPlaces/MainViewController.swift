@@ -14,7 +14,7 @@ class MainViewController: UITableViewController {
         "Burger Heroes", "Kitchen", "Bonsai", "Дастархан",
         "Индокитай", "X.O", "Балкан Гриль", "Sherlock Holmes",
         "Speak Easy", "Morris Pub", "Вкусные истории",
-        "Классик", "Love&Life", "Шок", "Бочка"
+        "Классик", "Love&Life", "Шок", "Бочка", "Шишка"
     ]
 
     override func viewDidLoad() {
@@ -34,7 +34,7 @@ class MainViewController: UITableViewController {
         
         cell.textLabel?.text = restaurantNames[indexPath.row]
         cell.imageView?.image = UIImage(named: restaurantNames[indexPath.row])
-        
+
         return cell
     }
 
