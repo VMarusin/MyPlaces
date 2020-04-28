@@ -45,5 +45,8 @@ class MainViewController: UITableViewController {
 //    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
 //        return 85
 //    }
+    
+    //этот метод нужне что бы мы могли на него сослатся при создании выхода из режима добавления нового заведения
+    @IBAction func cancelAction(_  segue: UIStoryboardSegue) {}
 
 }
