@@ -14,7 +14,7 @@ class MainViewController: UITableViewController {
         "Burger Heroes", "Kitchen", "Bonsai", "Дастархан",
         "Индокитай", "X.O", "Балкан Гриль", "Sherlock Holmes",
         "Speak Easy", "Morris Pub", "Вкусные истории",
-        "Классик", "Love&Life", "Шок", "Бочка", "Шишка"
+        "Классик", "Love&Life", "Шок", "Бочка"
     ]
 
     override func viewDidLoad() {
@@ -24,18 +24,26 @@ class MainViewController: UITableViewController {
 
     // MARK: - Table view data source
 
-
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return restaurantNames.count
+        return restaurantNames.count // кол-во ячеек равно кол-ву эл массива
     }
-
+    //наполнение ячеек
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
         
-        cell.textLabel?.text = restaurantNames[indexPath.row]
-        cell.imageView?.image = UIImage(named: restaurantNames[indexPath.row])
+        cell.textLabel?.text = restaurantNames[indexPath.row] // текстовое содержание ячейки
+        cell.imageView?.image = UIImage(named: restaurantNames[indexPath.row]) //изображение ячейки из массива
+        cell.imageView?.layer.cornerRadius = cell.frame.size.height / 2 //скругляем края (берем половину от высоты строки)
+        cell.imageView?.clipsToBounds = true // обрезаем изображение по границам закругления
 
         return cell
+    }
+    
+    // MARK: - Table View delegate
+    
+    // метод возвращает заданную высоту строки
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 85
     }
 
 }
