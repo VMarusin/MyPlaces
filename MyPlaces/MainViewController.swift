@@ -29,12 +29,12 @@ class MainViewController: UITableViewController {
     }
     //наполнение ячеек
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! CustomTableViewCell // as! CustomTableViewCell вставили специльно что бы привести к типу нашеve классу CustomTableViewCell
         
-        cell.textLabel?.text = restaurantNames[indexPath.row] // текстовое содержание ячейки
-        cell.imageView?.image = UIImage(named: restaurantNames[indexPath.row]) //изображение ячейки из массива
-        cell.imageView?.layer.cornerRadius = cell.frame.size.height / 2 //скругляем края (берем половину от высоты строки)
-        cell.imageView?.clipsToBounds = true // обрезаем изображение по границам закругления
+        cell.nameLabel.text = restaurantNames[indexPath.row] // текстовое содержание ячейки передаем в лейбл CustomTableViewCell
+        cell.imageOfPlace.image = UIImage(named: restaurantNames[indexPath.row]) //изображение ячейки из массива в лейбл CustomTableViewCell
+        cell.imageOfPlace.layer.cornerRadius = cell.imageOfPlace.frame.size.height / 2 //скругляем края (берем половину от высоты размера imageOfPlace) если нужно скугление от размера ячейки то imageOfPlace cell.frame.size.height / 2
+        cell.imageOfPlace.clipsToBounds = true // обрезаем изображение по границам закругления
 
         return cell
     }
