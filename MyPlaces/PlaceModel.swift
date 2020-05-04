@@ -6,32 +6,22 @@
 //  Copyright © 2020 Виктор Марусин. All rights reserved.
 //
 
-import UIKit
+import RealmSwift
 
-//описываем модель ресторана
-struct Place {
+//описываем модель ресторана (наследуемся от класса Object для работы Realm
+class Place: Object {
     
     //все поля опциональны кроме name т.к оно обязательно
-    var name: String
-    var location: String?
-    var type: String?
-    var image: UIImage?
-    var restaurantImage: String?
+    @objc dynamic var name = ""
+    @objc dynamic var location: String?
+    @objc dynamic var type: String?
+    @objc dynamic var imageData: Data?
     
-    static let restaurantNames = [
-        "Burger Heroes", "Kitchen", "Bonsai", "Дастархан",
-        "Индокитай", "X.O", "Балкан Гриль", "Sherlock Holmes",
-        "Speak Easy", "Morris Pub", "Вкусные истории",
-        "Классик", "Love&Life", "Шок", "Бочка"
-    ]
-    
-    //временныйы костыль для того что бы заполнить массив модели
-    static func getPlaces() -> [Place] {
-        var places = [Place]() // обьявим пустой массив в типом Place
-        
-        for place in restaurantNames {
-            places.append(Place(name: place, location: "Уфа", type: "Ресторан", image: nil, restaurantImage: place))
-        }
-        return places
+    convenience init(name: String, location: String?, type: String?, imageData: Data?) { //назначенный инициализатор что бы инциализировать все свойства предоставленне классом
+        self.init()
+        self.name = name
+        self.location = location
+        self.type = type
+        self.imageData = imageData
     }
 }

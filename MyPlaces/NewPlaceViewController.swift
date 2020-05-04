@@ -10,7 +10,6 @@ import UIKit
 
 class NewPlaceViewController: UITableViewController {
     
-    var newPlace: Place? //обьявляем экземпляр структуры Place
     var imageIsChanged = false //обьявляем флаг использвал ли пользователь свое изобразение или не использовал что бы поставить дефлтное
     
     @IBOutlet weak var placeImage: UIImageView!
@@ -22,10 +21,13 @@ class NewPlaceViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        
+//        DispatchQueue.main.async { // делаем синхронизацию БД в фоновом режиме во измбеждании фризов и блокировки доступв БД на лету без обновления интерфейса
+//            self.newPlace.savePlaces()
+//        }
+        
         tableView.tableFooterView = UIView() // убираем разлиновку ячеек заменяя ее обычным View там где нет ячеек
-        
         saveButton.isEnabled = false //отелючанм кнопку Save пока не будет введено название рестрана
-        
         placeName.addTarget(self, action: #selector(teхtFieldChanged), for: .editingChanged) //метод будет вызыватся при редактировании поля placeName
     }
     
@@ -76,11 +78,16 @@ class NewPlaceViewController: UITableViewController {
         } else {
             image = #imageLiteral(resourceName: "imagePlaceholder")
         }
-        newPlace = Place(name: placeName.text!,
-                         location: placeLocation.text,
-                         type: placeType.text,
-                         image: image,
-                         restaurantImage: nil)
+        
+        let imageData = image?.pngData() //конвертируем изображение из формата Data в формат image
+        
+        //инициализируем экземпляр класса
+        let newPlace = Place(name: placeName.text!,
+                             location: placeLocation.text,
+                             type: placeType.text,
+                             imageData: imageData)
+        
+        StorageManager.saveObject(newPlace) // записываем в БД
     }
     // Action выгрузки из памяти экрана NewPlace и выхода по нажати кнопи Cancel
     @IBAction func cancelAction(_ sender: Any) {

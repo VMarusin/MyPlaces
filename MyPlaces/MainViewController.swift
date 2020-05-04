@@ -7,48 +7,64 @@
 //
 
 import UIKit
+import RealmSwift
 
 class MainViewController: UITableViewController {
     
     //инициализируем нашу модель в которой есть функфия заполнения модели данными
-    var places = Place.getPlaces()
+    var places: Results<Place>! //Results это автообновляемы тим контейнера который возвращает запрашиваемые обьекты (аналог массива но для БД)
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        places = realm.objects(Place.self) //отображаем данные БД на экране инициализировав обьект places (запрашиваем данные в БД)
     }
 
     // MARK: - Table view data source
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return places.count // кол-во ячеек равно кол-ву эл массива
+        return places.isEmpty ? 0 : places.count // кол-во ячеек равно кол-ву эл БД. Если БД пустая то возырвщает пусто
     }
     //наполнение ячеек
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! CustomTableViewCell // as! CustomTableViewCell вставили специльно что бы привести к типу нашеve классу CustomTableViewCell
-        
+
         let place = places[indexPath.row]
-        
+
         // обращаемся к конкретному обьекту из массива places и передаем в лейбл CustomTableViewCell
         cell.nameLabel.text = place.name
         cell.locationLabel.text = place.location
         cell.typeLabel.text = place.type
-        
-        //присваиваем изображения ресторану
-        if place.image == nil {
-            cell.imageOfPlace.image = UIImage(named: place.restaurantImage!)
-        } else {
-            cell.imageOfPlace.image = place.image
-        }
-        
-        
+        cell.imageOfPlace.image = UIImage(data: place.imageData!)
+
         cell.imageOfPlace.layer.cornerRadius = cell.imageOfPlace.frame.size.height / 2 //скругляем края (берем половину от высоты размера imageOfPlace) если нужно скугление от размера ячейки то imageOfPlace cell.frame.size.height / 2
         cell.imageOfPlace.clipsToBounds = true // обрезаем изображение по границам закругления
 
         return cell
     }
-    
     // MARK: - Table View delegate
+    
+    // в этом метод мы помещаем все действия доступны после свайпа строки влево
+//    override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+//        let place = places[indexPath.row] //опрделяем обьект для удадления
+//        let deleteAction = UITableViewRowAction(style: .default, title: "Delete") { (_, _) in
+//
+//            StorageManager.deleteObject(place)
+//            tableView.deleteRows(at: [indexPath], with: .automatic)
+//        }
+//        return [deleteAction]
+//    }
+    
+    override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        
+        let place = places[indexPath.row] //опрделяем обьект для удадления
+        let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { (_, _, _) in
+            
+            StorageManager.deleteObject(place)
+            tableView.deleteRows(at: [indexPath], with: .automatic)
+        }
+        return UISwipeActionsConfiguration(actions: [deleteAction])
+    }
     
     // метод возвращает заданную высоту строки. Сейчас нам не нужен т.к высоту ячейки мы указали через интерфейс билдер
 //    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -60,8 +76,6 @@ class MainViewController: UITableViewController {
         guard let newPlaceVC = segue.source as? NewPlaceViewController else  { return }
         
         newPlaceVC.saveNewPlace() // создаем новый экзкмпляр
-        places.append(newPlaceVC.newPlace!) // добавляем в массив новый рестран
         tableView.reloadData() // обновляем tableView что бы отобразить новый ресторан
     }
-
 }
