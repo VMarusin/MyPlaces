@@ -11,7 +11,7 @@ import UIKit
 class MainViewController: UITableViewController {
     
     //инициализируем нашу модель в которой есть функфия заполнения модели данными
-    let places = Place.getPlaces()
+    var places = Place.getPlaces()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,11 +27,20 @@ class MainViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! CustomTableViewCell // as! CustomTableViewCell вставили специльно что бы привести к типу нашеve классу CustomTableViewCell
         
+        let place = places[indexPath.row]
+        
         // обращаемся к конкретному обьекту из массива places и передаем в лейбл CustomTableViewCell
-        cell.nameLabel.text = places[indexPath.row].name
-        cell.locationLabel.text = places[indexPath.row].location
-        cell.typeLabel.text = places[indexPath.row].type
-        cell.imageOfPlace.image = UIImage(named: places[indexPath.row].image)
+        cell.nameLabel.text = place.name
+        cell.locationLabel.text = place.location
+        cell.typeLabel.text = place.type
+        
+        //присваиваем изображения ресторану
+        if place.image == nil {
+            cell.imageOfPlace.image = UIImage(named: place.restaurantImage!)
+        } else {
+            cell.imageOfPlace.image = place.image
+        }
+        
         
         cell.imageOfPlace.layer.cornerRadius = cell.imageOfPlace.frame.size.height / 2 //скругляем края (берем половину от высоты размера imageOfPlace) если нужно скугление от размера ячейки то imageOfPlace cell.frame.size.height / 2
         cell.imageOfPlace.clipsToBounds = true // обрезаем изображение по границам закругления
@@ -47,6 +56,12 @@ class MainViewController: UITableViewController {
 //    }
     
     //этот метод нужне что бы мы могли на него сослатся при создании выхода из режима добавления нового заведения
-    @IBAction func cancelAction(_  segue: UIStoryboardSegue) {}
+    @IBAction func unwindSegue(_  segue: UIStoryboardSegue) {
+        guard let newPlaceVC = segue.source as? NewPlaceViewController else  { return }
+        
+        newPlaceVC.saveNewPlace() // создаем новый экзкмпляр
+        places.append(newPlaceVC.newPlace!) // добавляем в массив новый рестран
+        tableView.reloadData() // обновляем tableView что бы отобразить новый ресторан
+    }
 
 }

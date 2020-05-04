@@ -6,15 +6,17 @@
 //  Copyright © 2020 Виктор Марусин. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
-//описываем модель
+//описываем модель ресторана
 struct Place {
     
+    //все поля опциональны кроме name т.к оно обязательно
     var name: String
-    var location: String
-    var type: String
-    var image: String
+    var location: String?
+    var type: String?
+    var image: UIImage?
+    var restaurantImage: String?
     
     static let restaurantNames = [
         "Burger Heroes", "Kitchen", "Bonsai", "Дастархан",
@@ -28,7 +30,7 @@ struct Place {
         var places = [Place]() // обьявим пустой массив в типом Place
         
         for place in restaurantNames {
-            places.append(Place(name: place, location: "Уфа", type: "Ресторан", image: place))
+            places.append(Place(name: place, location: "Уфа", type: "Ресторан", image: nil, restaurantImage: place))
         }
         return places
     }
