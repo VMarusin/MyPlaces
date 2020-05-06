@@ -9,7 +9,9 @@
 import UIKit
 import RealmSwift
 
-class MainViewController: UITableViewController {
+class MainViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+    
+    @IBOutlet var tableView: UITableView!
     
     //инициализируем нашу модель в которой есть функфия заполнения модели данными
     var places: Results<Place>! //Results это автообновляемы тим контейнера который возвращает запрашиваемые обьекты (аналог массива но для БД)
@@ -22,11 +24,11 @@ class MainViewController: UITableViewController {
 
     // MARK: - Table view data source
 
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return places.isEmpty ? 0 : places.count // кол-во ячеек равно кол-ву эл БД. Если БД пустая то возырвщает пусто
     }
     //наполнение ячеек
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! CustomTableViewCell // as! CustomTableViewCell вставили специльно что бы привести к типу нашеve классу CustomTableViewCell
 
         let place = places[indexPath.row]
@@ -55,7 +57,7 @@ class MainViewController: UITableViewController {
 //        return [deleteAction]
 //    }
     
-    override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         
         let place = places[indexPath.row] //опрделяем обьект для удадления
         let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { (_, _, _) in
@@ -71,11 +73,24 @@ class MainViewController: UITableViewController {
 //        return 85
 //    }
     
+    
+    //MARK: - Navigation
+    
+    //тапая по ячейки мы передаем обьект из этой ячейки на другой VC
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "showDetail" {
+            guard let indexPath = tableView.indexPathForSelectedRow else { return }// определяем индекс текущий ячейки
+            let place = places[indexPath.row]//имея индекс текущей строки  мы можем извлечь обьект из массива Places по этому индексу
+            let newPlaceVC = segue.destination as! NewPlaceViewController // создаем экземлпяр этого VC
+            newPlaceVC.currentPlace = place//обращаемся к нашему экземпляру и передаем ему значение place
+        }
+    }
+    
     //этот метод нужне что бы мы могли на него сослатся при создании выхода из режима добавления нового заведения
     @IBAction func unwindSegue(_  segue: UIStoryboardSegue) {
         guard let newPlaceVC = segue.source as? NewPlaceViewController else  { return }
         
-        newPlaceVC.saveNewPlace() // создаем новый экзкмпляр
+        newPlaceVC.savePlace() // создаем новый экзкмпляр
         tableView.reloadData() // обновляем tableView что бы отобразить новый ресторан
     }
 }

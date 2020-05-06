@@ -10,6 +10,7 @@ import UIKit
 
 class NewPlaceViewController: UITableViewController {
     
+    var currentPlace: Place? //свойство куда мы можем передать обьект в типом Place (для отображения в режиме редактирования)
     var imageIsChanged = false //обьявляем флаг использвал ли пользователь свое изобразение или не использовал что бы поставить дефлтное
     
     @IBOutlet weak var placeImage: UIImageView!
@@ -21,7 +22,6 @@ class NewPlaceViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        
 //        DispatchQueue.main.async { // делаем синхронизацию БД в фоновом режиме во измбеждании фризов и блокировки доступв БД на лету без обновления интерфейса
 //            self.newPlace.savePlaces()
 //        }
@@ -29,6 +29,7 @@ class NewPlaceViewController: UITableViewController {
         tableView.tableFooterView = UIView() // убираем разлиновку ячеек заменяя ее обычным View там где нет ячеек
         saveButton.isEnabled = false //отелючанм кнопку Save пока не будет введено название рестрана
         placeName.addTarget(self, action: #selector(teхtFieldChanged), for: .editingChanged) //метод будет вызыватся при редактировании поля placeName
+        setupEditScreen() // запускаем метод передачи данных из Place в VC для редактирования
     }
     
     //MARK: TableViewDelegate
@@ -69,7 +70,7 @@ class NewPlaceViewController: UITableViewController {
         }
     }
     // метод записи нового ресторана
-    func saveNewPlace() {
+    func savePlace() {
         
         var image: UIImage?
         //если изображение было изменено пользователем то присваиваем значение из palceImage иначе присваевам дефолтное изображение
@@ -86,9 +87,46 @@ class NewPlaceViewController: UITableViewController {
                              location: placeLocation.text,
                              type: placeType.text,
                              imageData: imageData)
-        
-        StorageManager.saveObject(newPlace) // записываем в БД
+        //сохраняем в БД данные если мы находися в режиме редактирования
+        if currentPlace != nil {
+            try! realm.write {
+                currentPlace?.name = newPlace.name
+                currentPlace?.location = newPlace.location
+                currentPlace?.type = newPlace.type
+                currentPlace?.imageData = newPlace.imageData
+            }
+        } else {
+            StorageManager.saveObject(newPlace) // записываем в БД
+        }
     }
+    
+    private func setupEditScreen() {
+        if currentPlace != nil { //будет редкатировать только если текущий Place имеет значания. Т.е мы находимся в окне редактирования записи
+            
+            setupNavigationBar() //вызываем метод для разблокировки кнопок т.к мы находится на экране редактирования записи
+            imageIsChanged = true // изобржаение не будет менятся на дефолтное если мы находися в режиме редкатирования 
+            
+            guard let data = currentPlace?.imageData, let image = UIImage(data: data) else { return }// создаем свойство data и присваиваем ему значание катинки в формате Data. Если это получается то создаем свойство image куда передаем фото
+            //передаем данные VC в аутлеты
+            placeImage.image = image
+            placeImage.contentMode = .scaleToFill //масштабируем картинку под размер imageview
+            placeName.text = currentPlace?.name
+            placeLocation.text = currentPlace?.location
+            placeType.text = currentPlace?.type
+        }
+    }
+    
+    private func setupNavigationBar() {
+        
+        //удаляем заголовок кнопки возврата на предидущий экран при редактировании
+        if let topItem = navigationController?.navigationBar.topItem {
+            topItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
+        }
+        navigationItem.leftBarButtonItem = nil //убираем кнопку Cancel
+        title = currentPlace?.name//передаем в заголовок текущее наименование заведения
+        saveButton.isEnabled = true//включаем кнопку Save т.к данные у нас по умолчанию всегда заполнены
+    }
+    
     // Action выгрузки из памяти экрана NewPlace и выхода по нажати кнопи Cancel
     @IBAction func cancelAction(_ sender: Any) {
         dismiss(animated: true)
