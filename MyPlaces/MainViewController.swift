@@ -12,9 +12,12 @@ import RealmSwift
 class MainViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
     @IBOutlet var tableView: UITableView!
+    @IBOutlet var segmentedControl: UISegmentedControl!
+    @IBOutlet var reversedSortingButton: UIBarButtonItem!
     
     //инициализируем нашу модель в которой есть функфия заполнения модели данными
     var places: Results<Place>! //Results это автообновляемы тим контейнера который возвращает запрашиваемые обьекты (аналог массива но для БД)
+    var ascendingSorting = true //свойство отвечающее за обратную сортировку
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -92,5 +95,32 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         newPlaceVC.savePlace() // создаем новый экзкмпляр
         tableView.reloadData() // обновляем tableView что бы отобразить новый ресторан
+    }
+    
+    @IBAction func sortSelection(_ sender: UISegmentedControl) {
+        sorting()
+    }
+    
+    @IBAction func reversedSorting(_ sender: Any) {
+        ascendingSorting.toggle() //меняет значание на противоположное для обратной сотрировки
+        
+        if ascendingSorting {
+            reversedSortingButton.image = #imageLiteral(resourceName: "AZ")
+        } else {
+            reversedSortingButton.image = #imageLiteral(resourceName: "ZA")
+        }
+        
+        sorting() //вызываем метод сортировки
+    }
+   
+    // метод сортировки
+    private func sorting() {
+        if segmentedControl.selectedSegmentIndex == 0 { // если в SegmentedContol выбран первый раздел то сортируем по дате
+            places = places.sorted(byKeyPath: "date", ascending: ascendingSorting)
+        } else {
+            places = places.sorted(byKeyPath: "name", ascending: ascendingSorting)
+        }
+        
+        tableView.reloadData()
     }
 }
