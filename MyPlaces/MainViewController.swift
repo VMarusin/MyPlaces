@@ -76,6 +76,11 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     // MARK: - Table View delegate
     
+    //отключаем визуально выделение ячеек
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+    }
+    
     // в этом метод мы помещаем все действия доступны после свайпа строки влево
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         
@@ -92,7 +97,6 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
 //    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
 //        return 85
 //    }
-    
     
     //MARK: - Navigation
     

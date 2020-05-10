@@ -10,7 +10,7 @@ import UIKit
 
 class NewPlaceViewController: UITableViewController {
     
-    var currentPlace: Place? //свойство куда мы можем передать обьект в типом Place (для отображения в режиме редактирования)
+    var currentPlace: Place! //свойство куда мы можем передать обьект в типом Place (для отображения в режиме редактирования)
     var imageIsChanged = false //обьявляем флаг использвал ли пользователь свое изобразение или не использовал что бы поставить дефлтное
     
     @IBOutlet weak var placeImage: UIImageView!
@@ -18,6 +18,8 @@ class NewPlaceViewController: UITableViewController {
     @IBOutlet weak var placeName: UITextField!
     @IBOutlet weak var placeLocation: UITextField!
     @IBOutlet weak var placeType: UITextField!
+    @IBOutlet var raitingControl: RaitingControl!
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,7 +28,7 @@ class NewPlaceViewController: UITableViewController {
 //            self.newPlace.savePlaces()
 //        }
         
-        tableView.tableFooterView = UIView() // убираем разлиновку ячеек заменяя ее обычным View там где нет ячеек
+        tableView.tableFooterView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.frame.size.width, height: 1)) // убираем разлиновку ячеек заменяя ее обычным View там где нет ячеек
         saveButton.isEnabled = false //отелючанм кнопку Save пока не будет введено название рестрана
         placeName.addTarget(self, action: #selector(teхtFieldChanged), for: .editingChanged) //метод будет вызыватся при редактировании поля placeName
         setupEditScreen() // запускаем метод передачи данных из Place в VC для редактирования
@@ -86,7 +88,8 @@ class NewPlaceViewController: UITableViewController {
         let newPlace = Place(name: placeName.text!,
                              location: placeLocation.text,
                              type: placeType.text,
-                             imageData: imageData)
+                             imageData: imageData,
+                             raiting: Double(raitingControl.raiting))
         //сохраняем в БД данные если мы находися в режиме редактирования
         if currentPlace != nil {
             try! realm.write {
@@ -94,12 +97,14 @@ class NewPlaceViewController: UITableViewController {
                 currentPlace?.location = newPlace.location
                 currentPlace?.type = newPlace.type
                 currentPlace?.imageData = newPlace.imageData
+                currentPlace?.raiting = newPlace.raiting
             }
         } else {
             StorageManager.saveObject(newPlace) // записываем в БД
         }
     }
     
+    //метод вызывается при редактировании заведения
     private func setupEditScreen() {
         if currentPlace != nil { //будет редкатировать только если текущий Place имеет значания. Т.е мы находимся в окне редактирования записи
             
@@ -113,6 +118,7 @@ class NewPlaceViewController: UITableViewController {
             placeName.text = currentPlace?.name
             placeLocation.text = currentPlace?.location
             placeType.text = currentPlace?.type
+            raitingControl.raiting = Int(currentPlace.raiting)
         }
     }
     

@@ -144,6 +144,30 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" rowHeight="140" id="XnJ-b5-vFR">
+                                        <rect key="frame" x="0.0" y="503" width="414" height="140"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="XnJ-b5-vFR" id="y0B-LE-5Xu">
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="140"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <stackView opaque="NO" contentMode="scaleToFill" placeholderIntrinsicWidth="252" placeholderIntrinsicHeight="44" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="Zo4-ny-vfj" customClass="RaitingControl" customModule="MyPlaces" customModuleProvider="target">
+                                                    <rect key="frame" x="81" y="48" width="252" height="44"/>
+                                                    <userDefinedRuntimeAttributes>
+                                                        <userDefinedRuntimeAttribute type="number" keyPath="starCount">
+                                                            <integer key="value" value="-2"/>
+                                                        </userDefinedRuntimeAttribute>
+                                                    </userDefinedRuntimeAttributes>
+                                                </stackView>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="Zo4-ny-vfj" firstAttribute="centerY" secondItem="y0B-LE-5Xu" secondAttribute="centerY" id="OXl-ls-Tai"/>
+                                                <constraint firstItem="Zo4-ny-vfj" firstAttribute="centerX" secondItem="y0B-LE-5Xu" secondAttribute="centerX" id="SOu-ad-bvv"/>
+                                                <constraint firstItem="Zo4-ny-vfj" firstAttribute="centerX" secondItem="y0B-LE-5Xu" secondAttribute="centerX" id="an8-3n-qJF"/>
+                                                <constraint firstItem="Zo4-ny-vfj" firstAttribute="centerY" secondItem="y0B-LE-5Xu" secondAttribute="centerY" id="avc-Jw-hS0"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
                                 </cells>
                             </tableViewSection>
                         </sections>
@@ -169,6 +193,7 @@
                         <outlet property="placeLocation" destination="mi2-As-mgG" id="QoJ-3V-3za"/>
                         <outlet property="placeName" destination="tGX-1K-5cp" id="aFG-DP-Ce7"/>
                         <outlet property="placeType" destination="XOz-Ee-sCb" id="8IY-8O-uu0"/>
+                        <outlet property="raitingControl" destination="Zo4-ny-vfj" id="8uq-wc-VXq"/>
                         <outlet property="saveButton" destination="kRQ-M2-igy" id="q3c-TB-Non"/>
                     </connections>
                 </tableViewController>
@@ -185,16 +210,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="Jb7-Z1-byM">
-                                <rect key="frame" x="0.0" y="88" width="414" height="32"/>
-                                <segments>
-                                    <segment title="Date"/>
-                                    <segment title="Name"/>
-                                </segments>
-                                <connections>
-                                    <action selector="sortSelection:" destination="tJf-y0-YTy" eventType="valueChanged" id="TLc-9k-Dtd"/>
-                                </connections>
-                            </segmentedControl>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="85" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="bQS-yk-wm1">
                                 <rect key="frame" x="0.0" y="120" width="414" height="776"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
@@ -260,6 +275,16 @@
                                     <outlet property="delegate" destination="tJf-y0-YTy" id="CQ5-6h-3RN"/>
                                 </connections>
                             </tableView>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="Jb7-Z1-byM">
+                                <rect key="frame" x="0.0" y="88" width="414" height="32"/>
+                                <segments>
+                                    <segment title="Date"/>
+                                    <segment title="Name"/>
+                                </segments>
+                                <connections>
+                                    <action selector="sortSelection:" destination="tJf-y0-YTy" eventType="valueChanged" id="TLc-9k-Dtd"/>
+                                </connections>
+                            </segmentedControl>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
