@@ -7,11 +7,14 @@
 //
 
 import UIKit
+import Cosmos
 
 class NewPlaceViewController: UITableViewController {
     
     var currentPlace: Place! //свойство куда мы можем передать обьект в типом Place (для отображения в режиме редактирования)
     var imageIsChanged = false //обьявляем флаг использвал ли пользователь свое изобразение или не использовал что бы поставить дефлтное
+    
+    var currentRaiting = 0.0
     
     @IBOutlet weak var placeImage: UIImageView!
     @IBOutlet weak var saveButton: UIBarButtonItem!
@@ -19,6 +22,7 @@ class NewPlaceViewController: UITableViewController {
     @IBOutlet weak var placeLocation: UITextField!
     @IBOutlet weak var placeType: UITextField!
     @IBOutlet var raitingControl: RaitingControl!
+    @IBOutlet var cosmosView: CosmosView!
     
     
     override func viewDidLoad() {
@@ -32,6 +36,12 @@ class NewPlaceViewController: UITableViewController {
         saveButton.isEnabled = false //отелючанм кнопку Save пока не будет введено название рестрана
         placeName.addTarget(self, action: #selector(teхtFieldChanged), for: .editingChanged) //метод будет вызыватся при редактировании поля placeName
         setupEditScreen() // запускаем метод передачи данных из Place в VC для редактирования
+        
+        //альтернативный вариант отображения звезд спомощью Framework Cosmos
+        cosmosView.settings.fillMode = .full //указываем как будем заполнять звезды (поностью/половина/точечно)
+        cosmosView.didTouchCosmos = { raiting in // в raitin сохраняется текущий рейтинг
+            self.currentRaiting = raiting //сохряняем в переменной текущий рейтинг
+        }
     }
     
     //MARK: TableViewDelegate
@@ -89,7 +99,8 @@ class NewPlaceViewController: UITableViewController {
                              location: placeLocation.text,
                              type: placeType.text,
                              imageData: imageData,
-                             raiting: Double(raitingControl.raiting))
+                            // raiting: Double(raitingControl.raiting))
+                             raiting: currentRaiting)
         //сохраняем в БД данные если мы находися в режиме редактирования
         if currentPlace != nil {
             try! realm.write {
@@ -118,7 +129,8 @@ class NewPlaceViewController: UITableViewController {
             placeName.text = currentPlace?.name
             placeLocation.text = currentPlace?.location
             placeType.text = currentPlace?.type
-            raitingControl.raiting = Int(currentPlace.raiting)
+            //raitingControl.raiting = Int(currentPlace.raiting)
+            cosmosView.rating = currentPlace.raiting
         }
     }
     
