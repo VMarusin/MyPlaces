@@ -81,16 +81,26 @@ class NewPlaceViewController: UITableViewController {
             view.endEditing(true)
         }
     }
+    
+    //MARK: Navigation
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier != "showMap" { return } //проверка на совпадение индетификатора перехода
+        
+        let mapVC = segue.destination as! MapViewController //создаем обьект класса MapViewController
+        mapVC.place.name = placeName.text!
+        mapVC.place.location = placeLocation.text!
+        mapVC.place.type = placeType.text!
+        mapVC.place.imageData = placeImage.image?.pngData()
+    }
+        
+    
+    
     // метод записи нового ресторана
     func savePlace() {
         
-        var image: UIImage?
+        let image = imageIsChanged ? placeImage.image : #imageLiteral(resourceName: "imagePlaceholder")
         //если изображение было изменено пользователем то присваиваем значение из palceImage иначе присваевам дефолтное изображение
-        if imageIsChanged {
-            image = placeImage.image
-        } else {
-            image = #imageLiteral(resourceName: "imagePlaceholder")
-        }
         
         let imageData = image?.pngData() //конвертируем изображение из формата Data в формат image
         
