@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16096" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="q9I-cR-ZUe">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="q9I-cR-ZUe">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
@@ -121,7 +121,7 @@
                                                     </constraints>
                                                     <state key="normal" image="Placeholder"/>
                                                     <connections>
-                                                        <segue destination="3K2-I8-YXz" kind="presentation" identifier="getAdress" id="eje-WY-8fF"/>
+                                                        <segue destination="3K2-I8-YXz" kind="presentation" identifier="getAddress" id="eje-WY-8fF"/>
                                                     </connections>
                                                 </button>
                                             </subviews>
@@ -304,6 +304,17 @@
                                     <action selector="centerViewInUserLocation" destination="3K2-I8-YXz" eventType="touchUpInside" id="3vG-Hu-ytW"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="G5F-E2-AJs">
+                                <rect key="frame" x="182" y="718" width="50" height="50"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="50" id="JtY-TH-uLf"/>
+                                    <constraint firstAttribute="width" constant="50" id="PZ7-IW-1bq"/>
+                                </constraints>
+                                <state key="normal" image="GetDirection"/>
+                                <connections>
+                                    <action selector="goButtonPressed" destination="3K2-I8-YXz" eventType="touchUpInside" id="Kks-Fe-2ZZ"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
@@ -316,18 +327,21 @@
                             <constraint firstAttribute="bottom" secondItem="RFI-6v-81w" secondAttribute="bottom" id="SMJ-Um-3yf"/>
                             <constraint firstItem="RFI-6v-81w" firstAttribute="trailing" secondItem="Pml-iH-gXD" secondAttribute="trailing" id="T4G-Et-zsy"/>
                             <constraint firstItem="r2g-EI-HdS" firstAttribute="centerY" secondItem="doc-w9-uwf" secondAttribute="centerY" constant="-20" id="VUB-iz-SjH"/>
+                            <constraint firstItem="G5F-E2-AJs" firstAttribute="centerX" secondItem="doc-w9-uwf" secondAttribute="centerX" id="Zkx-4I-Tl7"/>
                             <constraint firstItem="r2g-EI-HdS" firstAttribute="centerX" secondItem="doc-w9-uwf" secondAttribute="centerX" id="bZE-Mj-Wfb"/>
                             <constraint firstItem="Pml-iH-gXD" firstAttribute="trailing" secondItem="cWG-nW-XoP" secondAttribute="trailing" constant="20" id="ggd-hS-dk4"/>
                             <constraint firstItem="Pml-iH-gXD" firstAttribute="trailing" secondItem="nGW-6J-Wx0" secondAttribute="trailing" constant="40" id="ghN-5C-ZFT"/>
                             <constraint firstItem="RFI-6v-81w" firstAttribute="top" secondItem="cWG-nW-XoP" secondAttribute="bottom" constant="-175" id="ibD-fP-7NS"/>
                             <constraint firstItem="cWG-nW-XoP" firstAttribute="leading" secondItem="Pml-iH-gXD" secondAttribute="leading" constant="20" id="kUt-Pk-ehc"/>
+                            <constraint firstItem="Pml-iH-gXD" firstAttribute="bottom" secondItem="G5F-E2-AJs" secondAttribute="bottom" constant="40" id="uLd-0i-3Jh"/>
                             <constraint firstItem="RFI-6v-81w" firstAttribute="top" secondItem="doc-w9-uwf" secondAttribute="top" id="zwN-Ne-OFS"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="Pml-iH-gXD"/>
                     </view>
                     <connections>
-                        <outlet property="adressLabel" destination="cWG-nW-XoP" id="gHn-x6-Ryk"/>
+                        <outlet property="addressLabel" destination="cWG-nW-XoP" id="gHn-x6-Ryk"/>
                         <outlet property="doneButton" destination="kuG-g2-qQb" id="PDm-6w-bz7"/>
+                        <outlet property="goButton" destination="G5F-E2-AJs" id="WBC-OC-wik"/>
                         <outlet property="mapPinImage" destination="r2g-EI-HdS" id="vIw-rc-iMb"/>
                         <outlet property="mapView" destination="RFI-6v-81w" id="2xE-zD-cqC"/>
                     </connections>
@@ -510,11 +524,12 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="9Z2-Q3-CNi"/>
+        <segue reference="eje-WY-8fF"/>
         <segue reference="EFH-Wc-RJ9"/>
     </inferredMetricsTieBreakers>
     <resources>
         <image name="AZ" width="25" height="24"/>
+        <image name="GetDirection" width="50" height="50"/>
         <image name="Location" width="128" height="128"/>
         <image name="Photo" width="195" height="196"/>
         <image name="Pin" width="42" height="42"/>
